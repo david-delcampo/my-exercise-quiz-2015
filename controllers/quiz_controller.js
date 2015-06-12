@@ -33,6 +33,16 @@ function keyWords(search) {
   return words;
 }
 
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join?redirectlocale=en-US&redirectslug=JavaScript%2FReference%2FGlobal_Objects%2FArray%2Fjoin
+function patternLike(words) {
+  var separator = '%';
+  var pattern = separator + words.join(separator) + separator;
+  
+  return pattern;
+}
+
+
+
 // GET /quizes/question
 exports.show = function(req, res) {    
   res.render('quizes/show', { quiz: req.quiz });
