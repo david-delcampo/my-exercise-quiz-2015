@@ -25,6 +25,14 @@ exports.index = function(req, res) {
 };
 
 
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split
+function keyWords(search) {  
+  var separator = ' ';
+  var words = search.split(separator);  
+    
+  return words;
+}
+
 // GET /quizes/question
 exports.show = function(req, res) {    
   res.render('quizes/show', { quiz: req.quiz });
