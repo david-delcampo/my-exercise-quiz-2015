@@ -24,6 +24,15 @@ exports.index = function(req, res) {
   ).catch(function(error) { next(error);})
 };
 
+// http://docs.sequelizejs.com/en/latest/docs/querying/
+function searchConditions(search) {
+  conditions = {
+    where: ["pregunta like ?", patternLike(keyWords(search))],
+    order: [['pregunta', 'ASC']],
+  };
+  
+  return conditions;
+}
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split
 function keyWords(search) {  
