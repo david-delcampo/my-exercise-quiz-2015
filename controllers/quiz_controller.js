@@ -16,8 +16,13 @@ exports.load = function(req, res, next, quizId) {
   
 
 // GET /quizes
-exports.index = function(req, res) {
-  models.Quiz.findAll().then(
+exports.index = function(req, res) {  
+  var conditions = {};
+  if (req.query.search) {      
+      conditions = searchConditions(req.query.search);
+  }
+  
+  models.Quiz.findAll(conditions).then(
       function(quizes) {
 	res.render('quizes/index.ejs', { quizes: quizes });
       }
