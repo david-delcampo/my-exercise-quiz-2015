@@ -16,13 +16,45 @@ exports.load = function(req, res, next, quizId) {
   
 
 // GET /quizes
-exports.index = function(req, res) {
-  models.Quiz.findAll().then(
+exports.index = function(req, res) {  
+  var conditions = {};
+  if (req.query.search) {      
+      conditions = searchConditions(req.query.search);
+  }
+  
+  models.Quiz.findAll(conditions).then(
       function(quizes) {
 	res.render('quizes/index.ejs', { quizes: quizes });
       }
   ).catch(function(error) { next(error);})
 };
+
+// http://docs.sequelizejs.com/en/latest/docs/querying/
+function searchConditions(search) {
+  conditions = {
+    where: ["pregunta like ?", patternLike(keyWords(search))],
+    order: [['pregunta', 'ASC']],
+  };
+  
+  return conditions;
+}
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split
+function keyWords(search) {  
+  var separator = ' ';
+  var words = search.split(separator);  
+    
+  return words;
+}
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join?redirectlocale=en-US&redirectslug=JavaScript%2FReference%2FGlobal_Objects%2FArray%2Fjoin
+function patternLike(words) {
+  var separator = '%';
+  var pattern = separator + words.join(separator) + separator;
+  
+  return pattern;
+}
+
 
 
 // GET /quizes/question
