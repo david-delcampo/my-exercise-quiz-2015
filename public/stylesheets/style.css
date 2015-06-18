@@ -10,5 +10,7 @@ footer			{ background: #eee; text-align: center; }
 nav span		{ margin: 0px 10px 0px 0px; }
 footer span		{ margin: 0px 10px 0px 0px; }	
 
+#ErrorMsgs		{ color: #f61; font-size: smaler }
+
 #detalles_autor		{ height: 90%; }
 #detalles_autor img	{ height: 73%; }

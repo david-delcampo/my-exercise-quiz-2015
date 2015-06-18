@@ -20,17 +20,22 @@ exports.new = function(req, res) {
     { pregunta: "Pregunta", respuesta: "Respuesta" }
   );
   
-  res.render('quizes/new', { quiz: quiz });
+  res.render('quizes/new', { quiz: quiz, errors: [] });
 };
 
 // POST /quizes/create
 exports.create = function(req, res) {
   var quiz = models.Quiz.build(req.body.quiz);
   
-  // guarda en DB los campos pregunta y respuesta de quiz
-  quiz.save( {fields: ["pregunta","respuesta"]} ).then(function() {
-    res.redirect('/quizes');
-  })
+  err = quiz.validate();
+  if (err) {
+    res.render('quizes/new', {quiz: quiz, errors: convertErrorsQuizInObjetErrors(err)});
+  } else {
+    quiz 
+    .save({fields: ["pregunta", "respuesta"]}) 	// save: guarda en DB los campos pregunta y respuesta de quiz
+    .then( function(){ res.redirect('/quizes')})	// res.redirect: Redirección HTTP a lista de preguntas
+  }
+
 };
 
 // GET /quizes
@@ -42,7 +47,7 @@ exports.index = function(req, res) {
   
   models.Quiz.findAll(conditions).then(
       function(quizes) {
-	res.render('quizes/index.ejs', { quizes: quizes });
+	res.render('quizes/index.ejs', { quizes: quizes, errors: [] });
       }
   ).catch(function(error) { next(error);})
 };
@@ -75,18 +80,55 @@ function patternLike(words) {
 
 
 
-// GET /quizes/question
+// GET /quizes/:id
 exports.show = function(req, res) {    
-  res.render('quizes/show', { quiz: req.quiz });
+  res.render('quizes/show', { quiz: req.quiz, errors: [] });
 }; 
+
+
+// GET /quizes/:id/edit
+exports.edit = function(req, res) {
+  var quiz = req.quiz; // autoload de instancia de quiz
   
-// GET /quizes/answer
+  res.render('quizes/edit', { quiz: quiz, errors: [] });
+};
+
+exports.update = function(req, res) {
+  req.quiz.pregunta = req.body.quiz.pregunta;
+  req.quiz.respuesta = req.body.quiz.respuesta;  
+
+  err = req.quiz.validate();
+  if (err) {
+    res.render('quizes/edit', { quiz: req.quiz, errors: convertErrorsQuizInObjetErrors(err) });
+  } else {
+    req.quiz
+    .save( {fields: ["pregunta","respuesta"] })		// save: guarda campos pregunta y respuesta en DB
+    .then( function(){ res.redirect('/quizes'); });	// Redirección HTTP a lista de preguntas (URL relativo)
+  }  
+};
+
+function convertErrorsQuizInObjetErrors(errors) {
+  // Debido a que la versión 1.7 de sequelizejs
+  // no tiene implementadas las promesas en la función
+  // validate, debemos convertir la lista de errores
+  // devuelta en un objeto de errores
+  
+  var errores = []
+  for (F in errors) {
+      errores.push({message: errors[F]});
+  }
+  
+  return errores;
+};  
+
+  
+// GET /quizes/:id/answer
 exports.answer = function(req, res) {
   var resultado = 'Incorrecto';
   if (req.query.respuesta === req.quiz.respuesta) {
     var resultado = 'Correcto';
   } 
-  res.render('quizes/answer', { quiz: req.quiz, respuesta: resultado});
+  res.render('quizes/answer', { quiz: req.quiz, respuesta: resultado, errors: [] });
 
   
 };
