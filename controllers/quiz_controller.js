@@ -129,6 +129,12 @@ exports.answer = function(req, res) {
     var resultado = 'Correcto';
   } 
   res.render('quizes/answer', { quiz: req.quiz, respuesta: resultado, errors: [] });
+};
 
-  
+
+// DELETE /quizes/:id
+exports.destroy = function (req, res) {
+  req.quiz.destroy().then( function() {
+    res.redirect('/quizes');
+  }).catch(function(error){ next(error) });  
 };
