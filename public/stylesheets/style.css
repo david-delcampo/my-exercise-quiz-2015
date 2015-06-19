@@ -14,3 +14,10 @@ footer span		{ margin: 0px 10px 0px 0px; }
 
 #detalles_autor		{ height: 90%; }
 #detalles_autor img	{ height: 73%; }
+
+
+.otro			{ color: #FFF817;}
+.humanidades		{ color: #10BC00;}
+.ocio			{ color: #BC0000;}
+.ciencia		{ color: #0D00FF;}
+.tecnologia		{ color: #7A7A7A;}
