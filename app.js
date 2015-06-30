@@ -40,6 +40,38 @@ app.use(function(req, res, next) {
   next();
 });
 
+// AutoLogout
+app.use(function(req, res, next) {
+  // En este momento, debe exister la variable session dentro de res
+  // ahí guardaremos una nueva variable con el timestamp del acceso
+  // con esa variable comprobaremos si debemos hacer el logout por sesion caducada   
+    
+  // fecha y hora en el momento actual, en milisegundos (timestamp)
+  var now = new Date().getTime();
+  // caducidad de la sesion inactiva, dos minutos en milisegundos
+  var TWO_MINUTES = 120 * 1000;
+
+  // hay sesion de usuario
+  if (req.session.user) {    
+    if (now - req.session.user.lastAccess >= TWO_MINUTES) {    
+      delete req.session.user;
+      
+      // ¿Genera error? al hacer el redirect y luego pasar a otro MW ... 
+      // ¿se genera un error por intentar modificar una cabecera ya enviada?
+      //    Sí, el redirect y la posterior cadena de MW generaban error.
+      //	Analizando la situación, es más correcto sin ello,
+      //	será loginRequired el encargado 
+      //	de pedir login, de nuevo, si es necesario en la url solicitada
+      //res.redirect('/login');	// ¿o simplemente pierde las opciones?
+    } else {    
+      // Guardamos el momento de esta última petición
+      req.session.user.lastAccess = now;    
+    }
+  }  
+  
+  next();
+});
+
 app.use('/', routes);
 
 // catch 404 and forward to error handler
