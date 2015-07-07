@@ -1,11 +1,40 @@
 // MW de autorización de accesos HTTP restringidos
-exports.loginRequired = function(req, res, next){
+exports.loginRequired = function(req, res, next) {
   if(req.session.user) {
     next();
   } else {
     res.redirect('/login');
   }
 };
+
+// MW de caducidad de sesión (AutoLogout)
+exports.autoLogout = function(req, res, next) {
+  if (req.session.user) {
+    if (isExpiredSession(req)) {
+      deleteSession(req);
+    } else{
+      // Guardamos el momento de esta última petición
+      req.session.user.lastAccess = now();      
+    }
+  }  
+  next();
+}; 
+
+function isExpiredSession(req) {  
+  var TWO_MINUTES = 120 * 1000;  	// caducidad de la sesion inactiva, dos minutos en milisegundos      
+  
+  ExpiredSession = false;
+  if (now() - req.session.user.lastAccess >= TWO_MINUTES) { 
+    ExpiredSession = true;  
+  }
+  
+  return ExpiredSession;
+};
+
+function now() {
+  return new Date().getTime();		// fecha y hora en el momento actual, en milisegundos (timestamp)
+};  
+  
 
 // Get /login   -- Formulario de login
 exports.new = function(req, res) {
@@ -39,7 +68,11 @@ exports.create = function(req, res) {
 
 // DELETE /logout	-- Destruir sesión
 exports.destroy = function(req, res) {
-  delete req.session.user;
+  deleteSession(req)
   // redirección a path anterior a login
   res.redirect(req.session.redir.toString());
 };
+
+function deleteSession(req) {
+  delete req.session.user;
+}
