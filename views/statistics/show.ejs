@@ -1,0 +1,9 @@
+<p><strong>Estadísticas:</strong></p>
+<table>  
+  <% for(var property in statistics) { %>
+    <tr>
+      <td> <%= statistics[property].msg %> : </td>
+      <td> <%= statistics[property].result %>  </td>
+    </tr>    
+  <% } %>
+</table>
