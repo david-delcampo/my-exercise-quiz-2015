@@ -24,22 +24,22 @@ function build_statistics() {
 	  });    
     };
     
-//    self.statistic_computeCommentsForQuestion = function() {
-//      var questions = statistic_countNumberOfQuestion();
-//      var comments = statistic_countNumberOfComments();     
-//
-//     return Q.spread([questions,comments], function(compute_questions, compute_comments) {
-// 	      var average = 0;   
-// 	      var num_questions = compute_questions.result;
-// 	      var num_comments = compute_comments.result;	  
-//	      
-// 	      if(num_questions) {       
-// 		average = num_comments / num_questions;
-// 	      }	  
-//	      
-//	      return { msg: "Número medio de comentarios por pregunta", result: average};
-//	  });  
-//   };    
+   self.statistic_computeCommentsForQuestion = function() {
+     var questions = statistic_countNumberOfQuestion();
+     var comments = statistic_countNumberOfComments();     
+
+    return Q.spread([questions,comments], function(compute_questions, compute_comments) {
+	      var average = 0;   
+	      var num_questions = compute_questions.result;
+	      var num_comments = compute_comments.result;	  
+	      
+	      if(num_questions) {       
+		average = num_comments / num_questions;
+	      }	  
+	      
+	      return { msg: "Número medio de comentarios por pregunta", result: average};
+	  });  
+  };    
     
 //    self.statistic_countQuestionWithoutComments = function() {
 //      //ToDo: probar que realmente está calculando bien  
