@@ -40,11 +40,19 @@ function build_statistics() {
 	      return { msg: "Número medio de comentarios por pregunta", result: average};
 	  });  
   };    
-    
+   
+   // Reimplementar: 
+   //	statistic_countQuestionWithoutComments
+   //	statistic_countQuestionWithComments 
+   // http://docs.sequelizejs.com/en/1.7.0/docs/models/#data-retrieval-finders
+   
+  
    // da problemas en Heroku, no parece terminar 
+   // le da problema el where, distinct Ok
    self.statistic_countQuestionWithoutComments = function() {
      //ToDo: probar que realmente está calculando bien  
      return models.Quiz.count({
+	    id: [1,2],
 	    distinct: 'Id',
 	    //where: { "Comments.Id": null } ,
 	    include: [{ model: models.Comment }]
