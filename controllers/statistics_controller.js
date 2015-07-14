@@ -53,16 +53,16 @@ function build_statistics() {
 //	  });  
 //    };    
     
-//     self.statistic_countQuestionWithComments = function() {
-//       //ToDo: probar que realmente está calculando bien. Genere count(*) 
-//       //	... no sobre el campo QuizId  
-//       //  Leo que tiene problemas con SQLite ?? 
-//       //  También, que en algunas versiones de sequelizejs, no estaba implementado
-//       return models.Comment.count({ distinct: 'QuizId' }).then(
-// 	  function(count) {   	  
-// 	      return { msg: "Número de preguntas con comentarios", result: count };
-// 	  });   
-//     }; 
+    self.statistic_countQuestionWithComments = function() {
+      //ToDo: probar que realmente está calculando bien. Genere count(*) 
+      //	... no sobre el campo QuizId  
+      //  Leo que tiene problemas con SQLite ?? 
+      //  También, que en algunas versiones de sequelizejs, no estaba implementado
+      return models.Comment.count({ distinct: 'QuizId' }).then(
+	  function(count) {   	  
+	      return { msg: "Número de preguntas con comentarios", result: count };
+	  });   
+    }; 
     
     
     self.show = function(req, res) {     
