@@ -46,7 +46,7 @@ function build_statistics() {
      //ToDo: probar que realmente está calculando bien  
      return models.Quiz.count({
 	    //distinct: 'Id',
-	    where: { "Comments.Id": null } ,
+	    //where: { "Comments.Id": null } ,
 	    include: [{ model: models.Comment }]
 	}).then(
 	  function(count) {   	  
