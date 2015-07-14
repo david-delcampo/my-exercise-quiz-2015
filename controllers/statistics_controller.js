@@ -45,7 +45,7 @@ function build_statistics() {
    self.statistic_countQuestionWithoutComments = function() {
      //ToDo: probar que realmente está calculando bien  
      return models.Quiz.count({
-	    //distinct: 'Id',
+	    distinct: 'Id',
 	    //where: { "Comments.Id": null } ,
 	    include: [{ model: models.Comment }]
 	}).then(
@@ -55,6 +55,7 @@ function build_statistics() {
    };    
     
     // da problemas en Heroku, no parece terminar
+    // le da problema el distinct
     self.statistic_countQuestionWithComments = function() {
       //ToDo: probar que realmente está calculando bien. Genere count(*) 
       //	... no sobre el campo QuizId  
