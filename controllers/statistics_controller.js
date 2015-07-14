@@ -17,12 +17,12 @@ function build_statistics() {
 	  });  
     };  
     
-//     self.statistic_countNumberOfComments = function() {
-//       return models.Comment.count().then(
-// 	  function(count) {   	  
-// 	      return { msg: "Número de comentarios totales", result: count };
-// 	  });    
-//     };
+    self.statistic_countNumberOfComments = function() {
+      return models.Comment.count().then(
+	  function(count) {   	  
+	      return { msg: "Número de comentarios totales", result: count };
+	  });    
+    };
     
 //    self.statistic_computeCommentsForQuestion = function() {
 //      var questions = statistic_countNumberOfQuestion();
