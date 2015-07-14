@@ -41,10 +41,11 @@ function build_statistics() {
 	  });  
   };    
     
+   // da problemas en Heroku, no parece terminar 
    self.statistic_countQuestionWithoutComments = function() {
      //ToDo: probar que realmente está calculando bien  
      return models.Quiz.count({
-	    distinct: 'Id',
+	    //distinct: 'Id',
 	    where: { "Comments.Id": null } ,
 	    include: [{ model: models.Comment }]
 	}).then(
@@ -53,17 +54,18 @@ function build_statistics() {
 	  });  
    };    
     
-//     // da problemas en Heroku, no parece terminar
-//     self.statistic_countQuestionWithComments = function() {
-//       //ToDo: probar que realmente está calculando bien. Genere count(*) 
-//       //	... no sobre el campo QuizId  
-//       //  Leo que tiene problemas con SQLite ?? 
-//       //  También, que en algunas versiones de sequelizejs, no estaba implementado
-//       return models.Comment.count({ distinct: 'QuizId' }).then(
-// 	  function(count) {   	  
-// 	      return { msg: "Número de preguntas con comentarios", result: count };
-// 	  });   
-//     }; 
+    // da problemas en Heroku, no parece terminar
+    self.statistic_countQuestionWithComments = function() {
+      //ToDo: probar que realmente está calculando bien. Genere count(*) 
+      //	... no sobre el campo QuizId  
+      //  Leo que tiene problemas con SQLite ?? 
+      //  También, que en algunas versiones de sequelizejs, no estaba implementado
+      //return models.Comment.count({ distinct: 'QuizId' }).then(
+      return models.Comment.count().then(
+	  function(count) {   	  
+	      return { msg: "Número de preguntas con comentarios", result: count };
+	  });   
+    }; 
     
     
     self.show = function(req, res) {     
