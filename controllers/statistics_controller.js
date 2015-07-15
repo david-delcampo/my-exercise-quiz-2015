@@ -61,16 +61,20 @@ function build_statistics() {
    };    
     
     // da problemas en Heroku, no parece terminar
-    // le da problema el distinct
+    // le da problema el distinct QuizId
+    // le da problema el group QuizId
     self.statistic_countQuestionWithComments = function() {
       //ToDo: probar que realmente está calculando bien. Genere count(*) 
       //	... no sobre el campo QuizId  
       //  Leo que tiene problemas con SQLite ?? 
-      //  También, que en algunas versiones de sequelizejs, no estaba implementado
-      //return models.Comment.count({ distinct: 'QuizId' }).then(
-      return models.Comment.count({group: 'QuizId'}).then(
-	  function(count) {   	  
-	      return { msg: "Número de preguntas con comentarios", result: count };
+      //  También, que en algunas versiones de sequelizejs, no estaba implementado      
+      //return models.Comment.count().then(
+      return models.Comment.findAndCountAll({
+	    distinct: 'QuizId',
+	    attributes: ['QuizId']
+	    })
+	.then(function(result) {   	  
+	      return { msg: "Número de preguntas con comentarios", result: result.count };
 	  });   
     }; 
     
