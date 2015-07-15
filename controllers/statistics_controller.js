@@ -64,7 +64,7 @@ function build_statistics() {
       var count = 0;
       rows.forEach(function(element) {
 	if(element.Comments.length === 0) {
-	    count++
+	    count++;
 	}
       }
       
