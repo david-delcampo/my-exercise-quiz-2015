@@ -50,15 +50,26 @@ function build_statistics() {
    // da problemas en Heroku, no parece terminar 
    // le da problema el where con null
    self.statistic_countQuestionWithoutComments = function() {     
-     return models.Quiz.count({	    
-	    distinct: 'Id',
-	    where: { id: [1,2] } ,
+     return models.Quiz.findAll({	    
 	    include: [{ model: models.Comment }]
 	}).then(
-	  function(count) {   	  
+	  function(rows) {   	  
+	      var count = self.countQuestionsWithoutComments(rows);
+	    
 	      return { msg: "Número de preguntas sin comentarios", result: count };
 	  });  
-   };    
+    };    
+    
+    self.countQuestionsWithoutComments = function(questions) {
+      var count = 0;
+      rows.forEach(function(element) {
+	if(element.Comments.length === 0) {
+	    count++
+	}
+      }
+      
+      return count;
+    }
     
     // da problemas en Heroku, no parece terminar
     // le da problema el distinct QuizId
@@ -69,13 +80,13 @@ function build_statistics() {
       //  Leo que tiene problemas con SQLite ?? 
       //  También, que en algunas versiones de sequelizejs, no estaba implementado      
       //return models.Comment.count().then(
-      return models.Comment.findAndCountAll({
-	    distinct: 'QuizId',
-	    attributes: ['QuizId']
-	    })
-	.then(function(result) {   	  
-	      return { msg: "Número de preguntas con comentarios", result: result.count };
-	  });   
+//       return models.Comment.findAndCountAll({
+// 	    distinct: 'QuizId',
+// 	    attributes: ['QuizId']
+// 	    })
+// 	.then(function(result) {   	  
+// 	      return { msg: "Número de preguntas con comentarios", result: result.count };
+//	  });   
     }; 
     
     
