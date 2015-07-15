@@ -54,7 +54,7 @@ function build_statistics() {
 	    include: [{ model: models.Comment }]
 	}).then(
 	  function(rows) {   	  
-	      var count = self.countQuestionsWithoutComments(rows);
+	      var count = self.countQuestionsWithoutComments(rows);    	      
 	    
 	      return { msg: "Número de preguntas sin comentarios", result: count };
 	  });  
@@ -62,11 +62,11 @@ function build_statistics() {
     
     self.countQuestionsWithoutComments = function(questions) {
       var count = 0;
-      rows.forEach(function(element) {
-	if(element.Comments.length === 0) {
+      questions.forEach(function(question) {	
+	if(question.comments.length === 0) {
 	    count++;
 	}
-      }
+      });
       
       return count;
     }
@@ -85,7 +85,7 @@ function build_statistics() {
 // 	    attributes: ['QuizId']
 // 	    })
 // 	.then(function(result) {   	  
-// 	      return { msg: "Número de preguntas con comentarios", result: result.count };
+ 	      return { msg: "Número de preguntas con comentarios", result: 73 };
 //	  });   
     }; 
     
