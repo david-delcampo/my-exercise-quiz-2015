@@ -48,13 +48,11 @@ function build_statistics() {
    
   
    // da problemas en Heroku, no parece terminar 
-   // le da problema el where, distinct Ok
    self.statistic_countQuestionWithoutComments = function() {
      //ToDo: probar que realmente está calculando bien  
-     return models.Quiz.count({
-	    id: [1,2],
+     return models.Quiz.count({	    
 	    distinct: 'Id',
-	    //where: { "Comments.Id": null } ,
+	    where: { id: [1,2] } ,
 	    include: [{ model: models.Comment }]
 	}).then(
 	  function(count) {   	  
