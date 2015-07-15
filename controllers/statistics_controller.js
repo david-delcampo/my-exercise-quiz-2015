@@ -48,8 +48,8 @@ function build_statistics() {
    
   
    // da problemas en Heroku, no parece terminar 
-   self.statistic_countQuestionWithoutComments = function() {
-     //ToDo: probar que realmente está calculando bien  
+   // le da problema el where con null
+   self.statistic_countQuestionWithoutComments = function() {     
      return models.Quiz.count({	    
 	    distinct: 'Id',
 	    where: { id: [1,2] } ,
@@ -68,7 +68,7 @@ function build_statistics() {
       //  Leo que tiene problemas con SQLite ?? 
       //  También, que en algunas versiones de sequelizejs, no estaba implementado
       //return models.Comment.count({ distinct: 'QuizId' }).then(
-      return models.Comment.count().then(
+      return models.Comment.count({group: 'QuizId'}).then(
 	  function(count) {   	  
 	      return { msg: "Número de preguntas con comentarios", result: count };
 	  });   
