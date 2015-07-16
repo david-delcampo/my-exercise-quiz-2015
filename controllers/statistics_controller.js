@@ -8,7 +8,7 @@ function build_statistics() {
     var self = this;
   
     self.statistic_countNumberOfQuestion = function() { 
-      // http://docs.sequelizejs.com/en/latest/api/model/#countoptions-promiseinteger
+      // http://docs.sequelizejs.com/en/latest/api/model/#countoptions-promiseinteger      
       // https://github.com/djmarland/node-app/blob/2c2773c6b3e3fbfd6a0ef9ea3113f8173a7dad03/app/models/job.js 
     
       return models.Quiz.count().then(
@@ -24,11 +24,11 @@ function build_statistics() {
 	  });    
     };
     
-    self.statistic_computeCommentsForQuestion = function() {
-      var questions = statistic_countNumberOfQuestion();
-      var comments = statistic_countNumberOfComments();     
+   self.statistic_computeCommentsForQuestion = function() {
+     var questions = 	self.statistic_countNumberOfQuestion();
+     var comments = 	self.statistic_countNumberOfComments();     
 
-      return Q.spread([questions,comments], function(compute_questions, compute_comments) {
+    return Q.spread([questions,comments], function(compute_questions, compute_comments) {
 	      var average = 0;   
 	      var num_questions = compute_questions.result;
 	      var num_comments = compute_comments.result;	  
@@ -39,29 +39,40 @@ function build_statistics() {
 	      
 	      return { msg: "Número medio de comentarios por pregunta", result: average};
 	  });  
-    };    
-    
-    self.statistic_countQuestionWithoutComments = function() {
-      //ToDo: probar que realmente está calculando bien  
-      return models.Quiz.count({
-	    distinct: 'Id',
-	    where: { "Comments.Id": null } ,
+    };       
+
+    // http://docs.sequelizejs.com/en/1.7.0/docs/models/#data-retrieval-finders
+    self.statistic_countQuestionWithoutComments = function() {     
+     return models.Quiz.findAll({	    
 	    include: [{ model: models.Comment }]
 	}).then(
-	  function(count) {   	  
+	  function(rows) {   	  
+	      var count = self.countQuestionsWithoutComments(rows);    	      
+	    
 	      return { msg: "Número de preguntas sin comentarios", result: count };
 	  });  
     };    
     
-    self.statistic_countQuestionWithComments = function() {
-      //ToDo: probar que realmente está calculando bien. Genere count(*) 
-      //	... no sobre el campo QuizId  
-      //  Leo que tiene problemas con SQLite ?? 
-      //  También, que en algunas versiones de sequelizejs, no estaba implementado
-      return models.Comment.count({ distinct: 'QuizId' }).then(
-	  function(count) {   	  
-	      return { msg: "Número de preguntas con comentarios", result: count };
-	  });   
+    self.countQuestionsWithoutComments = function(questions) {
+      var count = 0;
+      questions.forEach(function(question) {	
+	if(question.comments.length === 0) {
+	    count++;
+	}
+      });
+      
+      return count;
+    }    
+
+    self.statistic_countQuestionWithComments = function() {  
+	var questions 			= self.statistic_countNumberOfQuestion();
+	var questionsWithoutComments 	= self.statistic_countQuestionWithoutComments();   
+     
+	return Q.spread([questions,questionsWithoutComments], function(compute_questions, compute_questionsWithoutComments) {	      
+	      var questionsWithComments = compute_questions.result - compute_questionsWithoutComments.result
+  
+ 	      return { msg: "Número de preguntas con comentarios", result: questionsWithComments };
+	});   
     }; 
     
     
