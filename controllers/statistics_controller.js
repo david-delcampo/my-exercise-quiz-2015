@@ -41,7 +41,7 @@ function build_statistics() {
 	  });  
     };       
 
-    // http://docs.sequelizejs.com/en/1.7.0/docs/models/#data-retrieval-finders
+    // http://docs.sequelizejs.com/en/1.7.0/docs/models/
     self.statistic_countQuestionWithoutComments = function() {     
      return models.Quiz.findAll({	    
 	    include: [{ model: models.Comment }]
@@ -74,6 +74,15 @@ function build_statistics() {
  	      return { msg: "Número de preguntas con comentarios", result: questionsWithComments };
 	});   
     }; 
+    
+    self.statistic_countNumberOfCommentsUnpublished = function() {
+      return models.Comment.count({
+	      where: { publicado: false } 	
+	}).then(
+	  function(count) {   	  
+	      return { msg: "Número de comentarios sin publicar", result: count };
+	  });    
+    };    
     
     
     self.show = function(req, res) {     
